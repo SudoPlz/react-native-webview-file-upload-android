@@ -17,6 +17,7 @@ import com.facebook.react.common.annotations.VisibleForTesting;
 public class AndroidWebViewModule extends ReactContextBaseJavaModule implements ActivityEventListener {
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> mUploadCallbackAboveL;
+    public static final int WEB_VIEW_REQUEST_CODE = 17001;
 
     @VisibleForTesting
     public static final String REACT_CLASS = "AndroidWebViewModule";
@@ -57,7 +58,7 @@ public class AndroidWebViewModule extends ReactContextBaseJavaModule implements 
     @Override
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         // super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1) {
+        if (requestCode == WEB_VIEW_REQUEST_CODE) {
             if (null == mUploadMessage && null == mUploadCallbackAboveL){
                 return;
             }
@@ -72,7 +73,7 @@ public class AndroidWebViewModule extends ReactContextBaseJavaModule implements 
     }
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
-        if (requestCode != 1 || mUploadCallbackAboveL == null) {
+        if (requestCode != WEB_VIEW_REQUEST_CODE || mUploadCallbackAboveL == null) {
             return;
         }
         Uri[] results = null;

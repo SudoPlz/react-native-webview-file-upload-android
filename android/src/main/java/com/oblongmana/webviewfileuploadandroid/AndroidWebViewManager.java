@@ -20,6 +20,8 @@ public class AndroidWebViewManager extends ReactWebViewManager {
 
     private Activity mActivity = null;
     private AndroidWebViewPackage aPackage;
+    public static final int WEB_VIEW_REQUEST_CODE = 17001;
+
     public String getName() {
         return "AndroidWebView";
     }
@@ -71,7 +73,7 @@ public class AndroidWebViewManager extends ReactWebViewManager {
                     final Intent galleryIntent = new Intent(Intent.ACTION_PICK);
                     galleryIntent.setType("image/*");
                     final Intent chooserIntent = Intent.createChooser(galleryIntent, "Choose File");
-                    module.getActivity().startActivityForResult(chooserIntent, 1);
+                    module.getActivity().startActivityForResult(chooserIntent, WEB_VIEW_REQUEST_CODE);
                 } catch (Exception e) {
                     Log.d("customwebview", e.toString());
                 }
