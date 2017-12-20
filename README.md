@@ -2,6 +2,13 @@
 ReactNative's WebView on Android does not support file input. This library
 adds in an `<AndroidWebView>` that does support file input.
 
+
+## Difference from original repo
+We made a couple of changes to make that project work with later react-native versions,
+and also added a unique activity requestCode so that the activity result isn't interpreted
+by another module.
+
+
 *PLEASE READ THE LIMITATIONS SECTION FIRST*
 
 The lack of support appears to be due to Android-level limitations -
