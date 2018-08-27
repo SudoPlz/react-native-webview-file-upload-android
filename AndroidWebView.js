@@ -108,6 +108,7 @@ class AndroidWebView extends Component {
     onMessage: PropTypes.func,
     onContentSizeChange: PropTypes.func,
     startInLoadingState: PropTypes.bool, // force WebView to show loadingView on first load
+    originWhitelist: PropTypes.array,
     style: ViewPropTypes.style,
     urlPrefixesForDefaultIntent: PropTypes.array,
 
@@ -326,11 +327,32 @@ class AndroidWebView extends Component {
   render() {
     let otherView = null;
 
+  const {
+      mixedContentMode,
+      scalesPageToFit,
+      injectedJavaScript,
+      userAgent,
+      javaScriptEnabled,
+      domStorageEnabled,
+      onMessage,
+      contentInset,
+      automaticallyAdjustContentInsets,
+      onContentSizeChange,
+      testID,
+      mediaPlaybackRequiresUserAction,
+      originWhitelist,
+      renderLoading,
+      renderError,
+      style,
+      html,
+      url,
+    } = this.props;
+
     if (this.state.viewState === WebViewState.LOADING) {
-      otherView = (this.props.renderLoading || defaultRenderLoading)();
+      otherView = (renderLoading || defaultRenderLoading)();
     } else if (this.state.viewState === WebViewState.ERROR) {
       const errorEvent = this.state.lastErrorEvent;
-      otherView = this.props.renderError && this.props.renderError(
+      otherView = renderError && renderError(
               errorEvent.domain,
               errorEvent.code,
               errorEvent.description);
@@ -338,7 +360,7 @@ class AndroidWebView extends Component {
       console.error(`RCTWebView invalid state encountered: ${this.state.loading}`);
     }
 
-    const webViewStyles = [styles.container, this.props.style];
+    const webViewStyles = [styles.container, style];
     if (this.state.viewState === WebViewState.LOADING ||
       this.state.viewState === WebViewState.ERROR) {
       // if we're in either LOADING or ERROR states, don't show the webView
@@ -346,10 +368,10 @@ class AndroidWebView extends Component {
     }
 
     const source = this.props.source || {};
-    if (this.props.html) {
-      source.html = this.props.html;
-    } else if (this.props.url) {
-      source.uri = this.props.url;
+    if (html) {
+      source.html = html;
+    } else if (url) {
+      source.uri = url;
     }
 
     if (source.method === 'POST' && source.headers) {
@@ -363,24 +385,25 @@ class AndroidWebView extends Component {
         ref={(c) => { this[RCT_WEBVIEW_REF] = c; }}
         key="androidwebViewKey"
         style={webViewStyles}
-        mixedContentMode={this.props.mixedContentMode}
+        mixedContentMode={mixedContentMode}
         source={resolveAssetSource(source)}
-        scalesPageToFit={this.props.scalesPageToFit}
-        injectedJavaScript={this.props.injectedJavaScript}
-        userAgent={this.props.userAgent}
-        javaScriptEnabled={this.props.javaScriptEnabled}
-        domStorageEnabled={this.props.domStorageEnabled}
-        messagingEnabled={typeof this.props.onMessage === 'function'}
+        scalesPageToFit={scalesPageToFit}
+        injectedJavaScript={injectedJavaScript}
+        userAgent={userAgent}
+        javaScriptEnabled={javaScriptEnabled}
+        domStorageEnabled={domStorageEnabled}
+        messagingEnabled={typeof onMessage === 'function'}
         onMessage={this.onMessage}
-        contentInset={this.props.contentInset}
-        automaticallyAdjustContentInsets={this.props.automaticallyAdjustContentInsets}
-        onContentSizeChange={this.props.onContentSizeChange}
+        contentInset={contentInset}
+        automaticallyAdjustContentInsets={automaticallyAdjustContentInsets}
+        onContentSizeChange={onContentSizeChange}
         onLoadingStart={this.onLoadingStart}
         onLoadingFinish={this.onLoadingFinish}
         onLoadingError={this.onLoadingError}
-        testID={this.props.testID}
-        mediaPlaybackRequiresUserAction={this.props.mediaPlaybackRequiresUserAction}
+        testID={testID}
+        mediaPlaybackRequiresUserAction={mediaPlaybackRequiresUserAction}
         uploadEnabledAndroid={true}
+        originWhitelist={originWhitelist}
       />
     );
 
